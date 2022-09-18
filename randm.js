@@ -62,11 +62,14 @@ function getMusica(musicas){
 
 function mostrarInterface(musicaNome){
 
+    // Limpar console
+    console.log('\033[2J');
+
     rl.question(
-        "Tocando agora: " + musicaNome + "\n" +
-        "(r) Tocar novamente" + "\n" +
-        "(t) Tocar outra música" + "\n" + 
-        "(q) Sair" + "\n"
+        "\x1b[35mTocando agora: " + musicaNome + "\x1b[0m\n" +
+        "\x1b[32m(r) Tocar novamente" + "\x1b[0m\n" +
+        "\x1b[36m(t) Tocar outra música" + "\x1b[0m\n" + 
+        "\x1b[31m(q) Sair" + "\x1b[0m\n"
     , (char) => {
         switch (char){
             case "r":
@@ -81,8 +84,8 @@ function mostrarInterface(musicaNome){
             case "q":
                 process.exit();
             default:
-                console.log("Comando inválido");
                 mostrarInterface(musicaNome);
+                console.log("Comando inválido");
         }
     });
 
