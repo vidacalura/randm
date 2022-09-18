@@ -12,6 +12,8 @@ validacaoEpica();
 const musicFolder = __dirname + "/Music/";
 const musicas = fs.readdirSync(musicFolder);
 
+const videoExtensions = [ ".mp4", ".mp3", ".webm", ".mkv" ]; 
+
 try {
     const musicaNome = getMusica(musicas);
 
@@ -43,6 +45,8 @@ function getMusica(musicas){
     const randNum = Math.floor(Math.random() * musicas.length - 1);
     let musicaNome = "";
 
+    console.log(musicas[randNum])
+
     for (let i = 0; i < musicas[randNum].length; i++){
         if (musicas[randNum][i] == " "){
             musicaNome += "\u005C ";
@@ -55,6 +59,19 @@ function getMusica(musicas){
             musicaNome += musicas[randNum][i];
         }
     }
+
+    // Validação
+    if (musicaNome.includes(".")){
+        const videoTipo = musicaNome.slice(musicaNome.lastIndexOf("."));
+
+        if (!videoExtensions.includes(videoTipo)){
+            musicaNome = getMusica(musicas);
+        }
+    }
+    else{
+        musicaNome = getMusica(musicas);
+    }
+        
 
     return musicaNome;
 
