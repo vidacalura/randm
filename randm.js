@@ -6,22 +6,39 @@ const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
+let musicas, musicFolder;
+const videoExtensions = [ ".mp4", ".mp3", ".webm", ".mkv", ".m3u" ]; 
 
 validacaoEpica();
 
-const musicFolder = __dirname + "/Music/";
-const musicas = fs.readdirSync(musicFolder);
+if (process.argv.length >= 3){
+    // Validação youtube / dir
+    
+    musicFolder = process.argv[2];
 
-const videoExtensions = [ ".mp4", ".mp3", ".webm", ".mkv" ]; 
+    if (musicFolder[musicFolder.length - 1] != "/")
+        musicFolder += "/";
 
-try {
+    try {
+        musicas = fs.readdirSync(musicFolder);
+    }
+    catch (err){
+        console.log("Erro. Verifique se a pasta foi declarada corretamente.");
+        process.exit();
+    }
+
     const musicaNome = getMusica(musicas);
 
     rodarMusica(musicFolder, musicaNome);
     mostrarInterface(musicaNome);
+
 }
-catch(err){
-    console.log("Lembre-se de rodar o código em ~/ (/home/user/)");
+else {
+    console.log(
+        "Argumentos insuficientes. Adicione a pasta que você deseja utilizar.\n" +
+        "Ex: node randm.js ~/Music"
+    );
+    process.exit();
 }
 
 
