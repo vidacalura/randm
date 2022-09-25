@@ -12,8 +12,6 @@ const videoExtensions = [ ".mp4", ".mp3", ".webm", ".mkv", ".m3u" ];
 validacaoEpica();
 
 if (process.argv.length >= 3){
-    // Validação youtube / dir
-    
     musicFolder = process.argv[2];
 
     if (musicFolder[musicFolder.length - 1] != "/")
@@ -44,16 +42,30 @@ else {
 
 async function rodarMusica(musicFolder, musicaNome){
 
-    exec(`celluloid ${musicFolder}${musicaNome}`, (error, stdout, stderr) => {
-        if (error) {
-            console.log(`error: ${error.message}`);
-            return;
-        }
-        if (stderr) {
-            console.log(`stderr: ${stderr}`);
-            return;
-        }
-    });
+    try {
+        exec(`celluloid ${musicFolder}${musicaNome}`, (error, stdout, stderr) => {
+            if (error) {
+                console.log(`error: ${error.message}`);
+                return;
+            }
+            if (stderr) {
+                console.log(`stderr: ${stderr}`);
+                return;
+            }
+        });
+    }
+    catch (err){
+        exec(`mpv ${musicFolder}${musicaNome}`, (error, stdout, stderr) => {
+            if (error) {
+                console.log(`error: ${error.message}`);
+                return;
+            }
+            if (stderr) {
+                console.log(`stderr: ${stderr}`);
+                return;
+            }
+        });
+    }
 
 }
 
@@ -62,13 +74,12 @@ function getMusica(musicas){
     const randNum = Math.floor(Math.random() * musicas.length - 1);
     let musicaNome = "";
 
-    console.log(musicas[randNum])
-
     for (let i = 0; i < musicas[randNum].length; i++){
         if (musicas[randNum][i] == " "){
             musicaNome += "\u005C ";
         }
-        else if (musicas[randNum][i] == "(" || musicas[randNum][i] == ")" || musicas[randNum][i] == "'"){
+        else if (musicas[randNum][i] == "(" || musicas[randNum][i] == ")" || musicas[randNum][i] == "'"
+        || musicas[randNum][i] == "&"){
             musicaNome += "\u005C";
             musicaNome += musicas[randNum][i];
         }
@@ -96,8 +107,7 @@ function getMusica(musicas){
 
 function mostrarInterface(musicaNome){
 
-    // Limpar console
-    console.log('\033[2J');
+    console.clear();
 
     rl.question(
         "\x1b[35mTocando agora: " + musicaNome + "\x1b[0m\n" +
