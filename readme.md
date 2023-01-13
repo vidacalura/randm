@@ -9,4 +9,4 @@ Para usar o randm.rs são necessários apenas 2 passos:
 
 `cd /pasta/com/randm`
 
-`./randm ~/pasta/com/musicas`
+`./randm /pasta/com/musicas`
