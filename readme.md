@@ -1,10 +1,12 @@
-# randm.js
+# randm.rs
 
-randm.js é um simples script em Node.js que visa escolher de forma aleatória músicas baixadas localmente em uma pasta.
+randm.rs é um simples script em Rust que visa escolher de forma aleatória músicas baixadas localmente em uma pasta.
 
 ### Uso:
 
-Para usar o randm.js são necessários apenas 3 argumentos:
+Para usar o randm.rs são necessários apenas 2 passos:
 
 
-node randm.js /local/da/pasta/
+`cd /pasta/com/randm`
+
+`./randm ~/pasta/com/musicas`
