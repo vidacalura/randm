@@ -27,6 +27,8 @@ fn main() {
         }    
     }
 
+    let musica_folder_len = music_folder.len();
+
     // Coloca arquivos da pasta em Vector
     let arquivos = fs::read_dir(music_folder).unwrap();
     let mut arquivos_nomes: Vec<String> = vec![];
@@ -37,18 +39,22 @@ fn main() {
     } 
     
     // Roda música aleatória
+    let mut musica_historico: Vec<String> = vec![];
     let mut musica = pegar_musica(&arquivos_nomes);
     tocar_musica(&musica);
+
+    musica_historico.push(musica.clone());
 
     loop {
         print!("{}[2J", 27 as char);
 
         // Mostra menu
         println!(
-            "{}\n{}\n{}\n{}\n", 
-            format!("Tocando agora: {}", musica).purple().bold(),
+            "{}\n{}\n{}\n{}\n{}", 
+            format!("Tocando agora: {}", &musica[musica_folder_len..]).purple().bold(),
             format!("(r) Tocar novamente").green().bold(),
             format!("(t) Tocar outra música").blue().bold(),
+            format!("(h) Ver histórico").bold(),
             format!("(q) Sair").red().bold()
         );
 
@@ -61,12 +67,38 @@ fn main() {
             "t" => {
                 musica = pegar_musica(&arquivos_nomes);
                 tocar_musica(&musica);
+                musica_historico.push(musica.clone());
                 continue;
-            }
+            },
             "r" => {
                 tocar_musica(&musica);
                 continue;
-            }
+            },
+            "h" => {
+                mostrar_historico(&musica_historico, musica_folder_len);
+                
+                println!("{}", format!("Escolha uma música do histórico").bold());
+                let mut acao = String::new(); 
+                io::stdin()
+                    .read_line(&mut acao)
+                    .expect("Erro ao ler ação.");
+
+                let hist_num: usize = match acao.trim().parse() {
+                    Ok(num) => num,
+                    Err(_) => {
+                        println!("Input inválido.");
+                        continue;
+                    }
+                };
+
+                if hist_num == 0 {
+                    continue;
+                }
+
+                musica = musica_historico[hist_num - 1].clone();
+                tocar_musica(&musica);
+                continue;
+            },
             "q" => break,
             _ => {
                 continue;
@@ -99,5 +131,19 @@ fn tocar_musica(mus: &String) {
         .arg(&mus)
         .spawn()
         .expect("Erro ao rodar música :(");
+
+}
+
+fn mostrar_historico(hist: &Vec<String>, folder_len: usize){
+
+    let mut count: u64 = 0;
+
+    print!("{}[2J", 27 as char);
+    println!("{}", format!("+-----------------------------+").purple().bold());
+    println!("0. Voltar");
+    for i in hist {
+        println!("{}. {}", count + 1, &i[folder_len..]);
+        count += 1;
+    }
 
 }
